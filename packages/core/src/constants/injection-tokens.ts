@@ -1,0 +1,27 @@
+/**
+ * Dependency injection token for the global event handling service.
+ * Use this symbol to register or retrieve the service responsible for
+ * emitting and listening to application-wide events.
+ */
+export const EVENT_SERVICE = Symbol.for('aurora:event:service');
+
+/**
+ * Dependency injection token for the logging service.
+ * Use this symbol to register or retrieve the logger instance that
+ * handles structured logging throughout the application.
+ */
+export const LOGGER_SERVICE = Symbol.for('aurora:logger:service');
+
+/**
+ * Dependency injection token for the platform driver.
+ * Use this symbol to register or retrieve the driver that provides
+ * platform-specific APIs and runtime integration.
+ */
+export const PLATFORM_DRIVER = Symbol.for('aurora:platform:driver');
+
+/**
+ * Dependency injection token for the WebView service.
+ * Use this symbol to register or retrieve the service responsible for
+ * creating and managing in-game WebView instances.
+ */
+export const WEBVIEW_SERVICE = Symbol.for('aurora:webview:service');

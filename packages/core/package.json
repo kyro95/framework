@@ -1,0 +1,43 @@
+{
+    "name": "@aurora-mp/core",
+    "version": "0.0.0",
+    "description": "Core package of the aurora-mp TypeScript framework, providing dependency injection, event handling, and module registration.",
+    "keywords": [
+        "aurora-mp",
+        "core",
+        "framework",
+        "multiplayer",
+        "gta",
+        "typescript",
+        "dependency-injection",
+        "event-handling",
+        "module-system"
+    ],
+    "license": "MIT",
+    "author": "Aurora Team",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/aurora-mp/framework.git",
+        "directory": "packages/core"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
+    },
+    "scripts": {
+        "build": "tsup",
+        "types": "tsup --dts-only"
+    },
+    "devDependencies": {
+        "tsup": "^8.5.0"
+    },
+    "dependencies": {
+        "reflect-metadata": "^0.2.2"
+    }
+}

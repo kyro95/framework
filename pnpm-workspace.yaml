@@ -1,4 +1,11 @@
 packages:
-    - docs
-    - packages/*
-    - packages/platforms/**
+  #- docs
+  - packages/*
+  #- packages/platforms/altv/**
+  #- packages/platforms/ragemp/**
+  #- tests/**
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - esbuild
+  - unrs-resolver
