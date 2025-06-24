@@ -1,0 +1,37 @@
+{
+    "name": "@aurora-mp/framework",
+    "private": true,
+    "version": "0.0.0",
+    "description": "A cross-platform, TypeScript framework for multiplayer mods in GTA.",
+    "license": "MIT",
+    "author": "Aurora Team",
+    "type": "module",
+    "scripts": {
+        "build": "pnpm -r --filter \"!@aurora-mp/docs\" build",
+        "build:docs": "pnpm -F @aurora-mp/docs build",
+        "test": "jest --verbose",
+        "lint": "eslint \"packages/*/src/**/*.ts\"",
+        "lint:log": "eslint \"packages/*/src/**/*.ts\" --format unix > eslint.log",
+        "format": "prettier --write ."
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.29.0",
+        "@types/jest": "^30.0.0",
+        "@types/node": "^24.0.3",
+        "@typescript-eslint/parser": "^8.34.1",
+        "@typescript-eslint/eslint-plugin": "^8.34.1",
+        "eslint-config-prettier": "^10.1.5",
+        "eslint-formatter-unix": "^8.40.0",
+        "eslint-import-resolver-typescript": "^4.4.3",
+        "eslint-plugin-import": "^2.32.0",
+        "jest": "^30.0.2",
+        "prettier": "^3.5.3",
+        "ts-jest": "^29.4.0",
+        "ts-node": "^10.9.2",
+        "tsup": "^8.5.0",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "reflect-metadata": "^0.2.2"
+    }
+}

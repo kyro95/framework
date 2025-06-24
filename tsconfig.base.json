@@ -1,0 +1,44 @@
+{
+	"compilerOptions": {
+		"lib": [
+			"ESNext",
+			"DOM"
+		],
+		"module": "ESNext",
+		"target": "ESNext",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "Bundler",
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false,
+		"exactOptionalPropertyTypes": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"checkJs": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"strictPropertyInitialization": false,
+		"stripInternal": true,
+		"paths": {
+			"@client/*": [
+				"packages/client/src/*"
+			],
+			"@core/*": [
+				"packages/core/src/*"
+			],
+			"@server/*": [
+				"packages/server/src/*"
+			],
+			"@webview/*": [
+				"packages/webview/src/*"
+			]
+		}
+	}
+}
