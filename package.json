@@ -7,7 +7,7 @@
     "author": "Aurora Team",
     "type": "module",
     "scripts": {
-        "build": "pnpm -r --filter \"!@aurora-mp/docs\" build",
+        "build": "pnpm -r --workspace-concurrency=1 --filter \"!@aurora-mp/docs\" build",
         "build:docs": "pnpm -F @aurora-mp/docs build",
         "test": "jest --verbose",
         "lint": "eslint \"packages/*/src/**/*.ts\"",
@@ -16,6 +16,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.29.0",
+        "@swc/core": "^1.12.6",
         "@types/jest": "^30.0.0",
         "@types/node": "^24.0.3",
         "@typescript-eslint/parser": "^8.34.1",
