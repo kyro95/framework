@@ -1,6 +1,6 @@
 [build]
   base = "."
-  command = "pnpm install && pnpm --filter @aurora-mp/docs build"
+  command = "pnpm install && pnpm run build:docs"
   publish = "docs/build"
 
 [build.environment]
