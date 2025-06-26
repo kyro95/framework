@@ -4,10 +4,6 @@
   publish = "docs/build"
 
 [build.environment]
-  NPM_FLAGS = "--version"
   NODE_VERSION = "18"
-  NETLIFY_USE_NIX = "false"
-  PNPM_HOME = "/opt/buildhome/.pnpm"
-  NPM_CONFIG_USERCONFIG = "/dev/null"
   NETLIFY_USE_PNPM = "true"
-  PATH = "/opt/build/repo/node_modules/.bin:/opt/buildhome/.pnpm:$PATH"
+  NETLIFY_USE_NIX = "false"
