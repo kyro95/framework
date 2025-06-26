@@ -1,0 +1,17 @@
+[build]
+  # Répertoire racine du repo (le monorepo)
+  base = "."
+  # Commande de build qui utilise le workspace PNPM pour builder Docusaurus
+  command = "pnpm install && pnpm --filter @aurora-mp/docs build"
+  # Dossier à déployer (généré par Docusaurus dans /docs/build)
+  publish = "docs/build"
+
+[build.environment]
+  # Active PNPM dans l'environnement Netlify
+  NPM_FLAGS = "--version"
+  NODE_VERSION = "18"  # ou 20 si ton projet le supporte
+  PNPM_HOME = "/opt/buildhome/.pnpm"
+  NPM_CONFIG_USERCONFIG = "/dev/null"
+  NETLIFY_USE_PNPM = "true"
+  # Ajoute .bin à PATH pour que docusaurus soit trouvable
+  PATH = "/opt/build/repo/node_modules/.bin:/opt/buildhome/.pnpm:$PATH"
