@@ -1,4 +1,16 @@
 /**
+ * The token for the platform-specific configuration loader.
+ */
+export const CONFIG_LOADER = Symbol.for('aurora:config:loader');
+
+/**
+ * Dependency injection token for the config service.
+ * Use this symbol to register or retrieve the config instance that
+ * handles structured config throughout the application on server-side.
+ */
+export const CONFIG_SERVICE = Symbol.for('aurora:config:service');
+
+/**
  * Dependency injection token for the global event handling service.
  * Use this symbol to register or retrieve the service responsible for
  * emitting and listening to application-wide events.
