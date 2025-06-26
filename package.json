@@ -12,10 +12,13 @@
         "test": "jest --verbose",
         "lint": "eslint \"packages/*/src/**/*.ts\"",
         "lint:log": "eslint \"packages/*/src/**/*.ts\" --format unix > eslint.log",
-        "format": "prettier --write ."
+        "format": "prettier --write .",
+        "release": "release-it --dry-run",
+        "release:dry": "release-it"
     },
     "devDependencies": {
         "@eslint/js": "^9.29.0",
+        "@release-it/conventional-changelog": "^10.0.1",
         "@swc/core": "^1.12.6",
         "@types/jest": "^30.0.0",
         "@types/node": "^24.0.3",
@@ -27,6 +30,7 @@
         "eslint-plugin-import": "^2.32.0",
         "jest": "^30.0.2",
         "prettier": "^3.5.3",
+        "release-it": "^19.0.3",
         "ts-jest": "^29.4.0",
         "ts-node": "^10.9.2",
         "tsup": "^8.5.0",

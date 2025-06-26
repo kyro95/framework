@@ -2,8 +2,8 @@ packages:
   #- docs
   - packages/*
   #- packages/platforms/altv/**
-  #- packages/platforms/ragemp/**
-  #- tests/**
+  - packages/platforms/ragemp/**
+  - tests/**
 
 onlyBuiltDependencies:
   - '@swc/core'
