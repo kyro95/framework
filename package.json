@@ -31,6 +31,7 @@
         "jest": "^30.0.2",
         "prettier": "^3.5.3",
         "release-it": "^19.0.3",
+        "release-it-pnpm": "^4.6.6",
         "ts-jest": "^29.4.0",
         "ts-node": "^10.9.2",
         "tsup": "^8.5.0",
