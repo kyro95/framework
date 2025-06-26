@@ -1,0 +1,21 @@
+{
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"baseUrl": "../packages",
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"strictBindCallApply": false,
+		"noImplicitAny": false,
+		"strict": false,
+		"composite": false,
+		"skipLibCheck": true,
+		"declaration": false,
+		"emitDeclarationOnly": false,
+		"strictNullChecks": true,
+		"exactOptionalPropertyTypes": true
+	},
+	"include": [
+		"../packages/core/src/**/*",
+		"../packages/client/src/**/*"
+	]
+}

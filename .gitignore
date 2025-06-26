@@ -14,10 +14,9 @@
 **/*.tsbuildinfo
 
 # Docs (Docusaurus)
-docs
 docs/.cache/
 docs/build/
-docs/api/
+docs/docs/api/
 
 # - TypeDoc Markdown
 docs/api/**/*.md
