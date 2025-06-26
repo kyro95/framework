@@ -1,5 +1,5 @@
 packages:
-  - docs/*
+  - docs
   - packages/*
   #- packages/platforms/altv/**
   - packages/platforms/ragemp/**
