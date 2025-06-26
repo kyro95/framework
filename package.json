@@ -13,8 +13,8 @@
         "lint": "eslint \"packages/*/src/**/*.ts\"",
         "lint:log": "eslint \"packages/*/src/**/*.ts\" --format unix > eslint.log",
         "format": "prettier --write .",
-        "release": "release-it --dry-run",
-        "release:dry": "release-it"
+        "release": "release-it",
+        "release:dry": "release-it --dry-run --changelog"
     },
     "devDependencies": {
         "@eslint/js": "^9.29.0",
