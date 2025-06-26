@@ -1,0 +1,34 @@
+{
+    "name": "@aurora-mp/platform-ragemp-client",
+    "version": "0.0.0",
+    "description": "Aurora platform driver implementation for RAGE Multiplayer client-side runtime.",
+    "license": "MIT",
+    "author": "Aurora Team",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/aurora-mp/framework.git",
+        "directory": "packages/platforms/ragemp/client"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
+    },
+    "scripts": {
+        "build": "tsup"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.4",
+        "tsup": "^8.5.0"
+    },
+    "dependencies": {
+        "@aurora-mp/core": "workspace:*",
+        "@aurora-mp/client": "workspace:*",
+        "@ragempcommunity/types-client": "^2.1.9"
+    }
+}
