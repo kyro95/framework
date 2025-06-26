@@ -1,7 +1,7 @@
 [build]
   base = "."
   command = "pnpm install && pnpm --filter @aurora-mp/docs build"
-  publish = "docs/build"
+  publish = "build"
 
 [build.environment]
   NODE_VERSION = "18"
