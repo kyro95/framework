@@ -56,7 +56,7 @@ Thumbs.db
 
 # ToDo
 packages/client
-packages/server
+#packages/server
 packages/webview
 packages/platforms
 tests
