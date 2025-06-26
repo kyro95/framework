@@ -64,7 +64,7 @@ export interface IPlatformDriver<TPlayer = unknown> {
      * @param url The URL to load in the WebView.
      * @returns An {@link IWebView} wrapper around the platform-specific WebView.
      */
-    createWebview?(id: string | number, url: string): IWebView;
+    createWebview?(id: string | number, url: string, focused: boolean, hidden: boolean): IWebView;
 
     /**
      * Destroys an existing WebView instance.
@@ -72,13 +72,4 @@ export interface IPlatformDriver<TPlayer = unknown> {
      * @param id The unique identifier of the WebView to destroy.
      */
     destroyWebview?(id: string | number): void;
-
-    // /**
-    //  * Subscribes to events coming from a WebView instance.
-    //  *
-    //  * @param webviewId The WebView identifier.
-    //  * @param event The name of the WebView-specific event.
-    //  * @param listener Callback invoked when the WebView event fires.
-    //  */
-    // onWebviewEvent?(webviewId: string | number, event: string, listener: (...args: unknown[]) => void): void;
 }
