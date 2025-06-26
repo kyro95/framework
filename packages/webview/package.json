@@ -1,0 +1,39 @@
+{
+    "name": "@aurora-mp/webview",
+    "version": "0.0.0",
+    "description": "Webview package of the aurora-mp TypeScript framework.",
+    "keywords": [
+        "aurora-mp",
+        "webview",
+        "framework",
+        "multiplayer",
+        "gta",
+        "typescript"
+    ],
+    "license": "MIT",
+    "author": "Aurora Team",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/aurora-mp/framework.git",
+        "directory": "packages/webview"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
+    },
+    "scripts": {
+        "build": "tsup"
+    },
+    "devDependencies": {
+        "tsup": "^8.5.0"
+    },
+    "dependencies": {
+        "@aurora-mp/core": "workspace:*"
+    }
+}
