@@ -53,3 +53,10 @@ Thumbs.db
 
 # Linux
 *~
+
+# ToDo
+packages/client
+packages/server
+packages/webview
+packages/platforms
+tests
