@@ -2,8 +2,8 @@ import path from 'path';
 import type { Config } from '@docusaurus/types';
 
 const config: Config = {
-    title: 'Aurora',
-    url: 'https://your-site.com',
+    title: '@aurora-mp',
+    url: 'https://aurora-mp.netlify.app/',
     baseUrl: '/',
     favicon: 'img/favicon.ico',
     onBrokenLinks: 'warn',
@@ -81,9 +81,10 @@ const config: Config = {
         [
             '@docusaurus/preset-classic',
             {
-                // blog: false,
                 docs: {
-                    sidebarPath: './sidebars.ts',
+                    path: 'docs',
+                    routeBasePath: 'docs',
+                    sidebarPath: require.resolve('./sidebars.js'),
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -94,9 +95,14 @@ const config: Config = {
 
     themeConfig: {
         navbar: {
-            title: 'Aurora',
+            title: '@aurora-mp',
             items: [
-                // { type: 'docSidebar', sidebarId: 'tutorialSidebar', label: 'Docs', position: 'left' },
+                {
+                    type: 'docSidebar',
+                    sidebarId: 'tutorialSidebar',
+                    label: 'Docs',
+                    position: 'left',
+                },
                 {
                     type: 'docSidebar',
                     sidebarId: 'apiSidebar',
@@ -107,10 +113,14 @@ const config: Config = {
                         { to: '/api/client', label: 'Client' },
                     ],
                 },
-                { href: 'https://github.com/aurora-mp', label: 'GitHub', position: 'right' },
+                {
+                    href: 'https://github.com/aurora-mp/framework',
+                    label: 'GitHub',
+                    position: 'right',
+                },
             ],
         },
-        footer: { style: 'dark', copyright: `© ${new Date().getFullYear()} Aurora.` },
+        footer: { style: 'dark', copyright: `© ${new Date().getFullYear()} @aurora-mp.` },
     },
 };
 

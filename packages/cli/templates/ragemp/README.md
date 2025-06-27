@@ -1,0 +1,3 @@
+# RAGE:MP Template
+
+## WIP

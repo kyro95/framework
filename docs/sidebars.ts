@@ -2,6 +2,11 @@ import coreTypedocSidebar from './docs/api/core/typedoc-sidebar.cjs';
 // import clientTypedocSidebar from './docs/api/client/typedoc-sidebar.cjs';
 
 const sidebars = {
+    tutorialSidebar: [
+        'intro', // votre doc d’intro
+        // … autres docs
+    ],
+
     apiSidebar: [
         {
             type: 'category',
