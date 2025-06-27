@@ -2,9 +2,11 @@ import { Type, ModuleMetadata, Token, Provider } from '../types';
 import { Container } from './container';
 
 /**
- * @internal
  * Wraps a module’s metadata and DI state for internal management.
  * Handles providers, controllers, imports, and exports for a single module.
+ *
+ * @category Core
+ * @public
  */
 export class ModuleWrapper {
     /**

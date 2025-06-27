@@ -8,6 +8,9 @@ import { MethodParamType } from '../enums';
  * - Invokes the decorated handler method on the controller instance
  *
  * This class is used internally by ApplicationFactory via EventBinder.
+ *
+ * @category Core
+ * @public
  */
 export class ControllerFlowHandler {
     /**

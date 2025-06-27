@@ -7,6 +7,7 @@ import { ControllerFlowHandler } from './controller-flow.handler';
 
 /**
  * EventBinder attaches decorated controller events to the platform driver.
+ *
  * @category Core
  * @public
  */

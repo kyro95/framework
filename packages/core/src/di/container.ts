@@ -4,6 +4,7 @@ import { Token } from '../types';
  * Simple dependency injection container that holds provider instances by token.
  * It allows registering and resolving values or class instances during application runtime.
  *
+ * @category Core
  * @public
  */
 export class Container {
