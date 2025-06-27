@@ -12,25 +12,6 @@ const config: Config = {
     i18n: { defaultLocale: 'en', locales: ['en'] },
 
     plugins: [
-        /*[
-            'docusaurus-plugin-typedoc',
-            {
-                entryPoints: ['../packages/core/src/index.ts'],
-                tsconfig: './tsconfig.typedoc.json',
-                // plugin: ['./typedoc-plugin.mjs'],
-                plugin: ['typedoc-plugin-markdown'],
-                theme: 'markdown',
-                readme: 'none',
-                indexFormat: 'table',
-                disableSources: true,
-                categorizeByGroup: true,
-                groupOrder: ['Classes', 'Interfaces', 'Enums'],
-                sidebar: { pretty: true },
-                parametersFormat: 'table',
-                enumMembersFormat: 'table',
-                useCodeBlocks: true,
-            },
-        ],*/
         // Core
         [
             'docusaurus-plugin-typedoc',
@@ -43,6 +24,10 @@ const config: Config = {
                 theme: 'markdown',
                 categorizeByGroup: true,
                 groupOrder: ['Classes', 'Interfaces', 'Enums'],
+                disableSources: true,
+                tableColumnSettings: {
+                    hideSources: true,
+                },
             },
         ],
         // Client
@@ -57,24 +42,48 @@ const config: Config = {
                 theme: 'markdown',
                 categorizeByGroup: true,
                 groupOrder: ['Classes', 'Interfaces', 'Enums'],
+                disableSources: true,
+                tableColumnSettings: {
+                    hideSources: true,
+                },
             },
         ],
-        /*// Client
+        // Server
         [
             'docusaurus-plugin-typedoc',
             {
-                id: 'client',
-                entryPoints: ['../packages/client/src/index.ts'],
+                id: 'server',
+                entryPoints: ['../packages/server/src/index.ts'],
                 tsconfig: path.resolve(__dirname, 'tsconfig.typedoc.json'),
-                out: 'api/client',
-                //routeBasePath: 'api/client',
-                //sidebar: { categoryLabel: 'Client API', position: 2 },
+                out: 'docs/api/server',
                 plugin: ['typedoc-plugin-markdown'],
                 theme: 'markdown',
                 categorizeByGroup: true,
                 groupOrder: ['Classes', 'Interfaces', 'Enums'],
+                disableSources: true,
+                tableColumnSettings: {
+                    hideSources: true,
+                },
             },
-        ],*/
+        ],
+        // Webview
+        [
+            'docusaurus-plugin-typedoc',
+            {
+                id: 'webview',
+                entryPoints: ['../packages/webview/src/index.ts'],
+                tsconfig: path.resolve(__dirname, 'tsconfig.typedoc.json'),
+                out: 'docs/api/webview',
+                plugin: ['typedoc-plugin-markdown'],
+                theme: 'markdown',
+                categorizeByGroup: true,
+                groupOrder: ['Classes', 'Interfaces', 'Enums'],
+                disableSources: true,
+                tableColumnSettings: {
+                    hideSources: true,
+                },
+            },
+        ],
     ],
 
     presets: [
@@ -83,7 +92,7 @@ const config: Config = {
             {
                 docs: {
                     path: 'docs',
-                    routeBasePath: 'docs',
+                    routeBasePath: '/',
                     sidebarPath: require.resolve('./sidebars.js'),
                 },
                 theme: {
@@ -110,7 +119,9 @@ const config: Config = {
                     position: 'left',
                     items: [
                         { to: '/api/core', label: 'Core' },
+                        { to: '/api/server', label: 'Server' },
                         { to: '/api/client', label: 'Client' },
+                        { to: '/api/webview', label: 'Webview' },
                     ],
                 },
                 {

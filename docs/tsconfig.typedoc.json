@@ -16,6 +16,8 @@
 	},
 	"include": [
 		"../packages/core/src/**/*",
-		"../packages/client/src/**/*"
+		"../packages/client/src/**/*",
+		"../packages/server/src/**/*",
+		"../packages/webview/src/**/*"
 	]
 }
