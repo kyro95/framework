@@ -8,7 +8,7 @@
     "type": "module",
     "scripts": {
         "build": "pnpm -r --workspace-concurrency=1 --filter \"!@aurora-mp/docs\" build",
-        "build:docs": "pnpm -F @aurora-mp/docs build",
+        "build:docs": "pnpm run build && pnpm -F @aurora-mp/docs build",
         "test": "jest --verbose",
         "lint": "eslint \"packages/*/src/**/*.ts\"",
         "lint:log": "eslint \"packages/*/src/**/*.ts\" --format unix > eslint.log",
