@@ -2,6 +2,16 @@
 
 
 
+## [0.0.1-alpha.2](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.1...0.0.1-alpha.2) (2025-06-27)
+
+## 0.0.1-alpha.2
+
+### &nbsp;&nbsp;&nbsp;Bug Fixes
+
+- **webview**: Fix RAGE:MP emitServer. &nbsp;-&nbsp; by **NeekoGta** [<samp>(f6580)</samp>](https://github.com/aurora-mp/framework/commit/f6580f5)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.0...0.0.1-alpha.1)
+
 ## [0.0.1-alpha.1](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.0...0.0.1-alpha.1) (2025-06-27)
 
 
