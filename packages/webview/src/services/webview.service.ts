@@ -67,7 +67,7 @@ export class WebviewService {
                 on: (event, listener) => (window as any).mp.events.add(event, listener),
                 onServer: (event, listener) => (window as any).mp.events.add(event, listener),
                 emit: (event, ...args) => (window as any).mp.trigger(event, ...args),
-                emitServer: (event, ...args) => (window as any).mp.events.trigger(event, ...args),
+                emitServer: (event, ...args) => (window as any).mp.trigger(event, ...args),
             };
         }
 
