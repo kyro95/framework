@@ -1,6 +1,8 @@
 {
     "name": "@aurora-mp/cli",
     "version": "0.0.0",
+    "license": "MIT",
+    "author": "Aurora Team",
     "bin": {
         "aurora-mp": "./bin/index.js"
     },
@@ -9,6 +11,15 @@
         "templates",
         "theme.json"
     ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/aurora-mp/framework.git",
+        "directory": "packages/cli"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
+    },
     "scripts": {
         "build": "tsup && cpx \"templates/**/*\" bin/templates",
         "dev": "tsup --watch",
