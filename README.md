@@ -32,7 +32,7 @@ With built-in dependency injection, an event-driven architecture, and first-clas
   Break your code into self-contained modules for core, client, server, and custom webviews—each managed by Aurora’s powerful module loader.
 
 - **Event-Driven**  
-  React to player actions, network events, and custom triggers via concise TypeScript decorators like `@OnEvent`, `@OnClient`, and `@OnWebview`.
+  React to player actions, network events, and custom triggers via concise TypeScript decorators like `@OnServer`, `@OnClient`, and `@OnWebview`.
 
 - **Type-Safe APIs**  
   Enjoy fully-typed interfaces for all core services (dependency injection, configuration, logging, webviews), with autocomplete and compile-time checks.
