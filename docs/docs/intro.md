@@ -13,12 +13,6 @@ Aurora Multiplayer (aurora-mp) is a powerful TypeScript framework that lets you 
 </p>
 
 <p align="center">
-	<a href="https://www.npmjs.com/~aurora-mp" target="_blank"><img src="https://img.shields.io/npm/v/@aurora-mp/core.svg" alt="NPM Version" /></a>
-	<a href="https://www.npmjs.com/~aurora-mp" target="_blank"><img src="https://img.shields.io/npm/l/@aurora-mp/core.svg" alt="Package License" /></a>
-	<a href="https://discord.gg/Jv95ygPSNY" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-</p>
-
-<p align="center">
 	<a href="#"><img src="https://img.shields.io/badge/⚠️-Early%20Development-yellow?style=for-the-badge" alt="Early Development"/></a>
 </p>
 
