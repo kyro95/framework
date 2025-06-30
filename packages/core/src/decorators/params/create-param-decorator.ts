@@ -19,12 +19,20 @@ export function createParamDecorator(type: MethodParamType): (data?: unknown) =>
                 return;
             }
 
+            const paramTypes: any[] = Reflect.getOwnMetadata('design:paramtypes', target, propertyKey) || [];
+
             // Retrieve existing parameter metadata for this method, or start fresh
             const existingParams: MethodParameter[] =
                 Reflect.getOwnMetadata(CONTROLLER_PARAMS_KEY, target, propertyKey) ?? [];
 
             // Append this parameter’s metadata: its index, type, and any extra data
-            existingParams.push({ index: parameterIndex, type, data });
+            existingParams.push({
+                index: parameterIndex,
+                type,
+                data,
+                metatype: paramTypes[parameterIndex],
+                method: propertyKey.toString(),
+            });
 
             // Define updated metadata back on the method for later resolution
             Reflect.defineMetadata(CONTROLLER_PARAMS_KEY, existingParams, target, propertyKey);

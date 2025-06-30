@@ -1,13 +1,20 @@
 import { MethodParamType } from '../enums';
 import { ArgumentMetadata } from './argument-metadata.interface';
 
+export interface BaseParameter extends ArgumentMetadata {
+    metatype?: Function;
+    method?: string;
+    isOptional?: boolean;
+    defaultValue?: any;
+}
+
 /**
  * Metadata for a controller method parameter that receives
  * the entire event payload.
  *
  * @public
  */
-export interface PayloadParameter extends ArgumentMetadata {
+export interface PayloadParameter extends BaseParameter {
     /**
      * The parameter kind: inject the full payload object.
      */
@@ -20,7 +27,7 @@ export interface PayloadParameter extends ArgumentMetadata {
  *
  * @public
  */
-export interface ParamParameter extends ArgumentMetadata {
+export interface ParamParameter extends BaseParameter {
     /**
      * The parameter kind: inject a single payload property.
      */
@@ -38,7 +45,7 @@ export interface ParamParameter extends ArgumentMetadata {
  *
  * @public
  */
-export interface PlayerParameter extends ArgumentMetadata {
+export interface PlayerParameter extends BaseParameter {
     /**
      * The parameter kind: inject the player object.
      */

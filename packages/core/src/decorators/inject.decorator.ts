@@ -1,23 +1,32 @@
-import { INJECT_TOKEN_KEY } from '../constants';
+import { INJECT_TOKEN_KEY, INJECT_PROPERTY_KEY } from '../constants';
 import { Token } from '../types';
 
 /**
- * Parameter decorator that allows injecting a dependency using a custom token.
- * Useful for injecting values or services that aren’t classes (e.g., configuration objects).
+ * Decorator to inject dependencies into constructor parameters or class properties.
+ *
+ * When applied to a parameter, stores the custom injection token for that parameter index.
+ * When applied to a property, records the injection token to resolve and assign the dependency after instantiation.
  *
  * @param token The injection token (class constructor, string, or symbol) to resolve from the DI container.
- * @returns A parameter decorator function that stores the token metadata for later resolution.
+ * @returns A decorator function usable as both a ParameterDecorator and PropertyDecorator.
  * @public
  */
-export function Inject(token: Token): ParameterDecorator {
-    return (target: object, _propertyKey: string | symbol | undefined, parameterIndex: number) => {
-        // Retrieve any existing custom tokens or initialize a new array
-        const customTokens: Token[] = Reflect.getOwnMetadata(INJECT_TOKEN_KEY, target) || [];
-
-        // Assign the provided token at the correct parameter index
-        customTokens[parameterIndex] = token;
-
-        // Store the updated token array back on the target
-        Reflect.defineMetadata(INJECT_TOKEN_KEY, customTokens, target);
+export function Inject(token: Token): PropertyDecorator & ParameterDecorator {
+    const decoratorFn = (target: object, propertyKey: string | symbol, parameterIndex?: number): void => {
+        if (typeof parameterIndex === 'number') {
+            // Parameter injection: record token for constructor parameter
+            const existingParams: Token[] = Reflect.getOwnMetadata(INJECT_TOKEN_KEY, target) || [];
+            existingParams[parameterIndex] = token;
+            Reflect.defineMetadata(INJECT_TOKEN_KEY, existingParams, target);
+        } else {
+            // Property injection: record token for class property
+            const ctor = target.constructor;
+            const existingProps: { key: string | symbol; token: Token }[] =
+                Reflect.getOwnMetadata(INJECT_PROPERTY_KEY, ctor) || [];
+            existingProps.push({ key: propertyKey, token });
+            Reflect.defineMetadata(INJECT_PROPERTY_KEY, existingProps, ctor);
+        }
     };
+
+    return decoratorFn as PropertyDecorator & ParameterDecorator;
 }

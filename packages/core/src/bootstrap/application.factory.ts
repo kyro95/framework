@@ -14,6 +14,7 @@ import {
     PLATFORM_DRIVER,
     LOGGER_SERVICE,
     CONFIG_SERVICE,
+    INJECT_PROPERTY_KEY,
 } from '../constants';
 import { ModuleWrapper, Container } from '../di';
 import { ModuleMetadata, Provider, Token, Type } from '../types';
@@ -281,28 +282,55 @@ export class ApplicationFactory {
     }
 
     /**
-     * Instantiates a class, injecting constructor dependencies.
-     * Note: Cannot infer instance type from Type, using 'unknown'.
-     * @param targetClass The class to instantiate
-     * @param contextModule The module providing DI context
+     * Create an instance of the given class, resolving and injecting both
+     * constructor-parameter tokens and decorated property tokens.
+     *
+     * @param targetClass The class to instantiate.
+     * @param contextModule The module wrapper providing the DI context.
+     * @returns A Promise resolving to a new instance with all dependencies injected.
      */
     private async instantiateClass(targetClass: Type, contextModule: ModuleWrapper): Promise<unknown> {
+        // Resolve constructor-parameter dependencies
         const paramTypes: (Type | undefined)[] = Reflect.getMetadata('design:paramtypes', targetClass) || [];
         const customTokens: (Token | undefined)[] = Reflect.getOwnMetadata(INJECT_TOKEN_KEY, targetClass) || [];
 
         const dependencies = await Promise.all(
-            paramTypes.map(async (param, index) => {
-                const token = customTokens[index] || param;
-                if (!token)
+            paramTypes.map(async (paramType, index) => {
+                // Use custom token if provided, else fall back to the reflected type
+                const token = customTokens[index] || paramType;
+                if (!token) {
                     throw new Error(
-                        `[Aurora] Could not resolve dependency for ${targetClass.name} at param index ${index}.`,
+                        `[Aurora] Could not resolve dependency for ${targetClass.name} at constructor index ${index}.`,
                     );
-
+                }
                 return this.resolveDependency(token, contextModule);
             }),
         );
 
-        return new targetClass(...dependencies);
+        // Instantiate the class with resolved constructor args
+        const instance = new (targetClass as any)(...dependencies);
+
+        // Walk up the prototype chain to collect @Inject-decorated properties
+        const propsToInject: { key: string | symbol; token: Token }[] = [];
+        let ctor: any = targetClass;
+
+        while (ctor && ctor !== Function.prototype) {
+            const ownProps = Reflect.getOwnMetadata(INJECT_PROPERTY_KEY, ctor) as
+                | Array<{ key: string | symbol; token: Token }>
+                | undefined;
+
+            if (ownProps) {
+                propsToInject.push(...ownProps);
+            }
+            ctor = Object.getPrototypeOf(ctor);
+        }
+
+        // Resolve and assign each property dependency
+        for (const { key, token } of propsToInject) {
+            (instance as any)[key] = await this.resolveDependency(token, contextModule);
+        }
+
+        return instance;
     }
 
     /**
