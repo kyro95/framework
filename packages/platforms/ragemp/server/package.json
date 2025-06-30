@@ -29,6 +29,8 @@
     "dependencies": {
         "@aurora-mp/core": "workspace:*",
         "@aurora-mp/server": "workspace:*",
-        "@ragempcommunity/types-server": "^2.1.9"
+        "@ragempcommunity/types-server": "^2.1.9",
+        "winston": "^3.17.0",
+        "winston-daily-rotate-file": "^5.0.0"
     }
 }

@@ -55,5 +55,6 @@ Thumbs.db
 #packages/client
 #packages/server
 #packages/webview
-packages/platforms
+packages/platforms/altv
+packages/platforms/fivem
 tests
