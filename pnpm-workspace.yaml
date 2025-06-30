@@ -3,7 +3,11 @@ packages:
   - packages/*
   #- packages/platforms/altv/**
   - packages/platforms/ragemp/**
-  #- tests/**
+  #- packages/platforms/fivem/**
+  #- tests/ragemp
+  #- tests/fivem/**
+  #- tests/webview/*
+  #- armonia/**
 
 onlyBuiltDependencies:
   - '@swc/core'
