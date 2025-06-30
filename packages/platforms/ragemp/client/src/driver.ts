@@ -81,8 +81,8 @@ export class RageClientDriver implements IPlatformDriver {
     /**
      * Emits a global client-side event.
      */
-    public emit(_eventName: string, ..._args: any[]): void {
-        // TODO
+    public emit(eventName: string, ...args: any[]): void {
+        mp.events.call(eventName, ...args);
     }
 
     // TODO: Check if we can pass an object as an argument (to make { hello: 'world' } (typescript type))
