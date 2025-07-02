@@ -89,4 +89,9 @@ export class RageClientDriver implements IPlatformDriver {
     public emitServer(eventName: string, ...args: any[]): void {
         mp.events.callRemote(eventName, ...args);
     }
+
+    public invokeServer<T = any>(rpcName: string, ...args: unknown[]): Promise<T> {
+        // TODO: Try/catch
+        return mp.events.callRemoteProc(rpcName, ...args) as Promise<T>;
+    }
 }
