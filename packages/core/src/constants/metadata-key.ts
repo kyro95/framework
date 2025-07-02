@@ -23,6 +23,13 @@ export const CONTROLLER_PARAMS_KEY = Symbol.for('aurora:controller:params');
 
 /**
  * @internal
+ * Symbol key for storing parameter metadata for controller rpc handlers.
+ * Used to resolve and inject method arguments when an event is invoked.
+ */
+export const CONTROLLER_RPCS_KEY = Symbol.for('aurora:controller:rpcs');
+
+/**
+ * @internal
  * Symbol key for storing custom injection tokens assigned to constructor parameters.
  */
 export const INJECT_TOKEN_KEY = Symbol.for('aurora:inject');

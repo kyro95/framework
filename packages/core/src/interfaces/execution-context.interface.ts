@@ -9,7 +9,7 @@ export interface ExecutionContext {
     /**
      * The name or identifier of the event being handled.
      */
-    readonly eventName: string;
+    readonly name: string;
 
     /**
      * The raw arguments array received from the platform driver for this event.

@@ -18,6 +18,13 @@ export const CONFIG_SERVICE = Symbol.for('aurora:config:service');
 export const EVENT_SERVICE = Symbol.for('aurora:event:service');
 
 /**
+ * Dependency injection token for the global rpc service.
+ * Use this symbol to register or retrieve the service responsible for
+ * emitting and listening to application-wide rpcs.
+ */
+export const RPC_SERVICE = Symbol.for('aurora:rpc:service');
+
+/**
  * Dependency injection token for the logging service.
  * Use this symbol to register or retrieve the logger instance that
  * handles structured logging throughout the application.

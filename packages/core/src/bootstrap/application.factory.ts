@@ -1,11 +1,11 @@
 import {
     IApplication,
-    IConfigService,
-    ILogger,
+    type ILogger,
     IPlatformDriver,
     OnAppInit,
     OnAppStarted,
     OnAppShutdown,
+    IConfigService,
 } from '../interfaces';
 import {
     MODULE_METADATA_KEY,
@@ -13,8 +13,8 @@ import {
     INJECT_TOKEN_KEY,
     PLATFORM_DRIVER,
     LOGGER_SERVICE,
-    CONFIG_SERVICE,
     INJECT_PROPERTY_KEY,
+    CONFIG_SERVICE,
 } from '../constants';
 import { ModuleWrapper, Container } from '../di';
 import { ModuleMetadata, Provider, Token, Type } from '../types';
@@ -22,6 +22,7 @@ import { Scope } from '../enums';
 import { getProviderScope, getTokenName, normalizeProvider, tokenToString } from '../utils';
 import { ControllerFlowHandler } from './controller-flow.handler';
 import { EventBinder } from './event-binder';
+import { RpcBinder } from './rpc-binder';
 
 /**
  * Bootstraps and manages the full Aurora application lifecycle:
@@ -40,6 +41,7 @@ export class ApplicationFactory {
     private readonly instanceContainer = new Container();
     private readonly flowHandler = new ControllerFlowHandler();
     private readonly eventBinder: EventBinder;
+    private readonly rpcBinder: RpcBinder;
     private logger: ILogger = console;
     private config?: IConfigService;
 
@@ -55,6 +57,7 @@ export class ApplicationFactory {
     private constructor(private readonly platformDriver: IPlatformDriver) {
         this.instanceContainer.register(PLATFORM_DRIVER, this.platformDriver);
         this.eventBinder = new EventBinder(platformDriver, this.flowHandler);
+        this.rpcBinder = new RpcBinder(platformDriver, this.flowHandler);
         this.applicationRef = {
             start: this.start.bind(this),
             get: this.get.bind(this),
@@ -84,16 +87,17 @@ export class ApplicationFactory {
         }
 
         this.started = true;
-        this.logger.info('[Aurora] Starting application and binding events.');
+        this.logger.info('[Aurora] Starting application, binding events and rpcs.');
 
         // Binding controller events.
         this.bindControllerEvents();
+        this.bindControllerRpcs();
 
         // Call lifecycle hooks and register shutdown listeners.
         await this.callLifecycle('onAppStarted');
         this.registerShutdownListeners();
 
-        this.logger.info('[Aurora] Application started and listening for events.');
+        this.logger.info('[Aurora] Application started, listening for events and rpcs.');
     }
 
     /**
@@ -142,10 +146,22 @@ export class ApplicationFactory {
         this.eventBinder.bindControllerEvents(controllersWithInstances);
     }
 
+    private bindControllerRpcs(): void {
+        const controllersWithInstances: [Type, Record<string, unknown>][] = [];
+        for (const module of this.moduleWrappers.values()) {
+            for (const controllerType of module.controllers) {
+                controllersWithInstances.push([
+                    controllerType,
+                    this.instanceContainer.resolve(controllerType) as Record<string, unknown>,
+                ]);
+            }
+        }
+        this.rpcBinder.bindControllerRpcs(controllersWithInstances);
+    }
+
     /**
      * Internal bootstrap: scans modules, builds the graph, and triggers instantiation.
      * @param rootModuleType The root module class
-     * @internal
      */
     private async initialize(rootModuleType: Type): Promise<void> {
         // Scan all modules to build the dependency graph.
@@ -212,11 +228,11 @@ export class ApplicationFactory {
      * Eagerly instantiates and assigns core services like Logger and Config.
      */
     private async initializeCoreServices(rootModule: ModuleWrapper): Promise<void> {
-        if (this.instanceContainer.has(CONFIG_SERVICE)) {
+        if (this.findModuleByProvider(CONFIG_SERVICE, rootModule)) {
             try {
                 this.config = (await this.resolveDependency(CONFIG_SERVICE, rootModule)) as IConfigService;
                 this.debug = this.config.get<boolean>('DEBUG', false);
-            } catch (e) {
+            } catch {
                 this.logger.warn(
                     `[Aurora] CONFIG_SERVICE not found or failed to load. Debug logging will be disabled.`,
                 );
@@ -225,7 +241,7 @@ export class ApplicationFactory {
 
         try {
             this.logger = (await this.resolveDependency(LOGGER_SERVICE, rootModule)) as ILogger;
-        } catch (e) {
+        } catch {
             this.logger.warn(`[Aurora] LOGGER_SERVICE not found. Falling back to console logging.`);
         }
     }
@@ -269,18 +285,16 @@ export class ApplicationFactory {
         }
     }
 
+    /**
+     * Instantiate all providers first, then all controllers.
+     */
     private async instantiateModules(): Promise<void> {
         for (const moduleWrapper of this.moduleWrappers.values()) {
-            for (const provider of moduleWrapper.metadata.providers ?? []) {
-                await this.resolveDependency(normalizeProvider(provider).provide, moduleWrapper);
-            }
-
             for (const controller of moduleWrapper.controllers) {
                 await this.resolveDependency(controller, moduleWrapper);
             }
         }
     }
-
     /**
      * Create an instance of the given class, resolving and injecting both
      * constructor-parameter tokens and decorated property tokens.
@@ -347,6 +361,7 @@ export class ApplicationFactory {
         if (this.instanceContainer.has(token)) {
             return this.instanceContainer.resolve(token);
         }
+
         if (seen.has(token)) {
             throw new Error(`[Aurora] Circular dependency detected for token "${getTokenName(token)}".`);
         }
@@ -354,42 +369,54 @@ export class ApplicationFactory {
 
         const destinationModule = this.findModuleByProvider(token, contextModule);
         if (!destinationModule) {
-            this.logger.error(
-                `[Aurora] [resolveDependency] Failed to resolve token '${getTokenName(token)}'. Searched from module '${contextModule.type.name}'`,
-            );
-            throw new Error(
-                `[Aurora] Cannot resolve dependency for token "${getTokenName(token)}". Make sure the provider is part of a module and is exported if used in another module.`,
-            );
+            throw new Error(`[AuroraDI] Cannot resolve dependency for token "${getTokenName(token)}"`);
+        }
+        const providerDef = this.findProviderDefinition(token, destinationModule);
+        if (!providerDef) {
+            throw new Error(`[AuroraDI] Cannot resolve dependency for token "${getTokenName(token)}"`);
         }
 
-        const providerDefinition = this.findProviderDefinition(token, destinationModule);
-        if (!providerDefinition) {
-            this.logger.error(
-                `[Aurora] [resolveDependency] Provider definition missing for token '${getTokenName(token)}' in module '${destinationModule.type.name}'`,
-            );
-            throw new Error(
-                `[Aurora] Internal Error: Could not find provider definition for token "${getTokenName(token)}".`,
-            );
+        const normalized = normalizeProvider(providerDef);
+        const scope = getProviderScope(providerDef);
+
+        // useValue
+        if ('useValue' in normalized && normalized.useValue !== undefined) {
+            this.instanceContainer.register(token, normalized.useValue);
+            return normalized.useValue;
         }
 
-        const { useClass, useValue } = normalizeProvider(providerDefinition);
-        let instance: unknown;
-        const scope = getProviderScope(providerDefinition);
+        // useFactory
+        if ('useFactory' in normalized && normalized.useFactory) {
+            const args = await Promise.all(
+                (normalized.inject ?? []).map(async ({ token: inj, optional }) => {
+                    try {
+                        return await this.resolveDependency(inj, destinationModule, seen);
+                    } catch (err) {
+                        if (optional) {
+                            return undefined;
+                        }
+                        throw err;
+                    }
+                }),
+            );
+            const result = await normalized.useFactory(...args);
+            if (scope === Scope.SINGLETON) {
+                this.instanceContainer.register(token, result);
+            }
+            return result;
+        }
 
-        if (useValue !== undefined) {
-            instance = useValue;
-            this.instanceContainer.register(token, instance);
+        // useClass
+        if ('useClass' in normalized && normalized.useClass) {
+            const instance = await this.instantiateClass(normalized.useClass, destinationModule);
+            if (scope === Scope.SINGLETON) {
+                this.instanceContainer.register(token, instance);
+            }
             return instance;
         }
 
-        if (scope === Scope.SINGLETON) {
-            instance = await this.instantiateClass(useClass!, destinationModule);
-            this.instanceContainer.register(token, instance);
-            return instance;
-        }
-
-        instance = await this.instantiateClass(useClass!, destinationModule);
-        return instance;
+        // Should not happen
+        throw new Error(`[AuroraDI] Cannot resolve dependency for token "${getTokenName(token)}"`);
     }
 
     /**

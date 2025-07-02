@@ -229,7 +229,99 @@ describe('ApplicationFactory', () => {
             expect(ctrl.a).not.toBe(ctrl.b);
         });
 
-        // TODO: Add useFactory when supported
+        it('injects via useFactory with a dependency', async () => {
+            const FACT_TOKEN = Symbol('FACT_TOKEN');
+
+            @Injectable()
+            class DepService {
+                public count = 1;
+            }
+
+            @Controller()
+            class TestController {
+                constructor(@Inject(FACT_TOKEN) public readonly result: DepService) {}
+            }
+
+            @Module({
+                providers: [
+                    DepService,
+                    {
+                        provide: FACT_TOKEN,
+                        useFactory: (dep: DepService) => {
+                            dep.count *= 2;
+                            return dep;
+                        },
+                        inject: [{ token: DepService }],
+                    },
+                ],
+                controllers: [TestController],
+            })
+            class TestModule {}
+
+            const app = await ApplicationFactory.create(TestModule, mockPlatformDriver);
+            const ctrl = await app.get(TestController);
+
+            expect(ctrl.result).toBeInstanceOf(DepService);
+            expect(ctrl.result.count).toBe(2);
+        });
+
+        it('useFactory returns a singleton by default', async () => {
+            const TOKEN = Symbol('SINGLETON_FACTORY');
+
+            @Controller()
+            class FirstController {
+                constructor(@Inject(TOKEN) public readonly x: object) {}
+            }
+            @Controller()
+            class SecondController {
+                constructor(@Inject(TOKEN) public readonly y: object) {}
+            }
+
+            @Module({
+                providers: [
+                    {
+                        provide: TOKEN,
+                        useFactory: () => ({}),
+                    },
+                ],
+                controllers: [FirstController, SecondController],
+            })
+            class TestModule {}
+
+            const app = await ApplicationFactory.create(TestModule, mockPlatformDriver);
+            const first = await app.get(FirstController);
+            const second = await app.get(SecondController);
+
+            expect(first.x).toBe(second.y); // même instance
+        });
+
+        it('factory supports optional dependencies', async () => {
+            const MAIN = Symbol('MAIN');
+            const OPTIONAL = Symbol('OPTIONAL');
+
+            @Controller()
+            class TestController {
+                constructor(@Inject(MAIN) public readonly data: { opt?: number }) {}
+            }
+
+            @Module({
+                providers: [
+                    {
+                        provide: MAIN,
+                        useFactory: (opt?: number) => ({ opt }),
+                        inject: [{ token: OPTIONAL, optional: true }],
+                    },
+                    // NOTE: on ne déclare pas OPTIONAL, donc ce token est introuvable
+                ],
+                controllers: [TestController],
+            })
+            class TestModule {}
+
+            const app = await ApplicationFactory.create(TestModule, mockPlatformDriver);
+            const ctrl = await app.get(TestController);
+
+            expect(ctrl.data).toEqual({ opt: undefined });
+        });
     });
 
     // Suite 3: Module Graphs and Cycles

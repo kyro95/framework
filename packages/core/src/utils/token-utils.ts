@@ -42,6 +42,10 @@ export function tokenToString(token: unknown): string {
         if ('useValue' in token) {
             return `[useValue: ${typeof (token as any).useValue}]`;
         }
+        if ('useFactory' in token) {
+            const name = (token as any).useFactory.name || '<anonymous>';
+            return `[useFactory: ${name}]`;
+        }
     }
     return String(token);
 }

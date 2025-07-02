@@ -2,7 +2,6 @@ import { EventType } from '../enums';
 import { CONTROLLER_EVENTS_KEY, CONTROLLER_PARAMS_KEY } from '../constants';
 import { IPlatformDriver } from '../interfaces';
 import { EventMetadata, Type } from '../types';
-
 import { ControllerFlowHandler } from './controller-flow.handler';
 
 /**
@@ -59,7 +58,7 @@ export class EventBinder {
         return async (...args: unknown[]) => {
             try {
                 const context = {
-                    eventName: handler.name,
+                    name: handler.name,
                     args,
                     payload: args,
                     player: handler.type === EventType.ON_CLIENT ? args[0] : undefined,

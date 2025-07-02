@@ -1,5 +1,6 @@
 export * from './events';
 export * from './params';
+export * from './rpc';
 export * from './controller.decorator';
 export * from './global.decorator';
 export * from './inject.decorator';

@@ -1,3 +1,4 @@
+import { Scope } from '../enums';
 import { Type, Token } from './common.types';
 
 /**
@@ -15,6 +16,8 @@ export interface ValueProvider<T = any> {
      * The actual value to be injected when the token is requested.
      */
     useValue: T;
+
+    scope?: Scope;
 }
 
 /**
@@ -32,6 +35,18 @@ export interface ClassProvider<T = any> {
      * The class to be instantiated and injected.
      */
     useClass: Type<T>;
+
+    scope?: Scope;
+}
+
+/**
+ * A provider that constructs via a factory function.
+ */
+export interface FactoryProvider<T = unknown> {
+    provide: Token<T>;
+    useFactory: (...args: any[]) => T | Promise<T>;
+    inject?: Array<{ token: Token<any>; optional?: boolean }>;
+    scope?: Scope;
 }
 
 /**
@@ -42,4 +57,4 @@ export interface ClassProvider<T = any> {
  *
  * @template T The type of the provided value.
  */
-export type Provider<T = any> = Type<T> | ValueProvider<T> | ClassProvider<T>;
+export type Provider<T = unknown> = Type<T> | ValueProvider<T> | ClassProvider<T> | FactoryProvider<T>;
