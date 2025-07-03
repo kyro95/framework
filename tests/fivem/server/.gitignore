@@ -1,0 +1,9 @@
+citizen
+crashes
+.replxx_history
+*.dll
+cache
+components.json
+*.exe
+*.key
+server-tls.crt
