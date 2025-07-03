@@ -2,7 +2,7 @@ import { RpcMetadata } from '../../types';
 import { CONTROLLER_RPCS_KEY } from '../../constants';
 import { RpcType } from '../../enums';
 
-export function createRpcDecorator(type: RpcType, name?: string): MethodDecorator {
+export function createRpcDecorator(type: RpcType, name?: string, webViewId?: string | number): MethodDecorator {
     return (target: object, methodKey: string | symbol) => {
         const rpcName = name ?? (methodKey as string);
         const existingRpcs: RpcMetadata[] = Reflect.getOwnMetadata(CONTROLLER_RPCS_KEY, target.constructor) ?? [];
@@ -14,7 +14,7 @@ export function createRpcDecorator(type: RpcType, name?: string): MethodDecorato
                 name: rpcName,
                 methodName: methodKey as string,
                 params: [],
-                // TODO: ...(webViewId !== undefined ? { webViewId } : {}),
+                ...(webViewId !== undefined ? { webViewId } : {}),
             },
         ];
 

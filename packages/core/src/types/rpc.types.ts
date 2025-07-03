@@ -6,5 +6,5 @@ export interface RpcMetadata {
     name: string;
     methodName: string;
     params: MethodParameter[];
-    // TODO: webViewId?: string | number | undefined;
+    webViewId?: string | number | undefined;
 }

@@ -58,6 +58,7 @@ export interface IPlatformDriver<TPlayer = unknown> {
     emitClient?(player: TPlayer, eventName: string, ...args: unknown[]): void;
 
     invokeServer?<T = any>(rpcName: string, ...args: unknown[]): Promise<T>;
+    invokeClient?<T = any>(player: TPlayer, rpcName: string, ...args: unknown[]): Promise<T>;
 
     onRpcClient?(rpcName: string, handler: (...args: unknown[]) => Promise<unknown> | unknown): void;
     onRpcServer?(rpcName: string, handler: (...args: unknown[]) => Promise<unknown> | unknown): void;

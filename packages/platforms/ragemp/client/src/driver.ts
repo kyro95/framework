@@ -39,6 +39,10 @@ export class RageClientDriver implements IPlatformDriver {
 
             webview.emit(eventName, ...rest);
         });
+
+        mp.events.addProc(WebViewEvents.INVOKE_SERVER_RPC, async (rpcName: string, ...args: unknown[]) => {
+            return await mp.events.callRemoteProc(rpcName, ...args);
+        });
     }
 
     public createWebview(
@@ -90,8 +94,26 @@ export class RageClientDriver implements IPlatformDriver {
         mp.events.callRemote(eventName, ...args);
     }
 
-    public invokeServer<T = any>(rpcName: string, ...args: unknown[]): Promise<T> {
-        // TODO: Try/catch
-        return mp.events.callRemoteProc(rpcName, ...args) as Promise<T>;
+    public async invokeServer<T = any, TArgs extends any[] = any[]>(rpcName: string, ...args: TArgs): Promise<T> {
+        try {
+            const result = (await mp.events.callRemoteProc(rpcName, ...args)) as T;
+            return result;
+        } catch (error) {
+            console.error(`[RPC] invokeClient failed for "${rpcName}":`, error);
+            throw error;
+        }
+    }
+
+    public onRpcClient(
+        rpcName: string,
+        handler: (player: PlayerMp, ...args: unknown[]) => Promise<unknown> | unknown,
+    ): void {
+        mp.events.addProc(rpcName, async (player: PlayerMp, ...allArgs: unknown[]) => {
+            try {
+                return await handler(player, ...allArgs);
+            } catch (err) {
+                return { error: (err as Error).message };
+            }
+        });
     }
 }

@@ -20,6 +20,20 @@ export class RageServerDriver implements IPlatformDriver {
         player.call(eventName, args);
     }
 
+    public async invokeClient<T = any, TArgs extends any[] = any[]>(
+        player: PlayerMp,
+        rpcName: string,
+        ...args: TArgs
+    ): Promise<T> {
+        try {
+            const result = (await player.callProc(rpcName, ...args)) as T;
+            return result;
+        } catch (error) {
+            console.error(`[RPC] invokeClient failed for "${rpcName}":`, error);
+            throw error;
+        }
+    }
+
     public onRpcServer(rpcName: string, handler: (...args: unknown[]) => Promise<unknown> | unknown): void {
         mp.events.addProc(rpcName, async (...allArgs: unknown[]) => {
             try {

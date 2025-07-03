@@ -1,5 +1,5 @@
-import { CONFIG_SERVICE, EVENT_SERVICE, Global, Module } from '@aurora-mp/core';
-import { ConfigService, EventService } from './services';
+import { CONFIG_SERVICE, EVENT_SERVICE, Global, Module, RPC_SERVICE } from '@aurora-mp/core';
+import { ConfigService, EventService, RpcService } from './services';
 
 /**
  * Provides shared server-side services.
@@ -16,7 +16,11 @@ import { ConfigService, EventService } from './services';
             provide: EVENT_SERVICE,
             useClass: EventService,
         },
+        {
+            provide: RPC_SERVICE,
+            useClass: RpcService,
+        },
     ],
-    exports: [CONFIG_SERVICE, EVENT_SERVICE],
+    exports: [CONFIG_SERVICE, EVENT_SERVICE, RPC_SERVICE],
 })
 export class ServerModule {}
