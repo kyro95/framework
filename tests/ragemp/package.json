@@ -1,0 +1,18 @@
+{
+    "name": "@tests/ragemp",
+    "version": "0.0.0",
+    "private": true,
+    "author": "Aurora Team",
+    "license": "MIT",
+    "scripts": {
+        "build": "pnpm -r run build"
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.21",
+        "esbuild": "^0.25.5",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "esbuild-plugin-tsc": "^0.5.0"
+    }
+}

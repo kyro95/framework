@@ -51,10 +51,6 @@ Thumbs.db
 # Linux
 *~
 
-# ToDo
-#packages/client
-#packages/server
-#packages/webview
-packages/platforms/altv
-packages/platforms/fivem
-tests
+# Tests (RAGE:MP)
+tests/fivem
+tests/omp
