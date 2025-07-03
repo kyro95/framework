@@ -45,8 +45,10 @@ With built-in dependency injection, an event-driven architecture, and first-clas
 Aurora Multiplayer currently provides first-class support for the following multiplayer platforms:
 
 - **alt:V** (WIP) – A modern, high-performance GTA V multiplayer platform with strong TypeScript support.
+  - *Will possibly be removed, not implemented now that it has become Majestic MP*
 - **FiveM** (Not yet) – Community-driven GTA V multiplayer mod with a massive ecosystem (experimental support via plugins).
-- **RAGE MP** (WIP) – A widely-used modding platform for GTA V, praised for its stability and extensive feature set.
+- **RAGE MP** (WIP, will be *finalized* soon) – A widely-used modding platform for GTA V, praised for its stability and extensive feature set.
+- **YAMP** - *Maybe?*
 - **Other Runtimes** – Easily extendable: create adapters for any GTA multiplayer environment of your choice.
 
 ## 🛠️ Getting Started
