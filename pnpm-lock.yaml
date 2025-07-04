@@ -553,10 +553,6 @@ packages:
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/compat-data@7.27.7':
-    resolution: {integrity: sha512-xgu/ySj2mTiUFmdE9yCMfBxLp4DHd5DwmbbD05YAuICfodYT3VvRxbrh81LGQ/8UpSdtMdfKMn3KouYDX59DGQ==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/compat-data@7.28.0':
     resolution: {integrity: sha512-60X7qkglvrap8mn1lh2ebxXdZYtUcpd7gsmy9kLaBJ4i/WdY8PqTSdxyA8qraikqKQK5C1KRBKXqznrVapyNaw==}
     engines: {node: '>=6.9.0'}
@@ -10754,8 +10750,6 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
-  '@babel/compat-data@7.27.7': {}
-
   '@babel/compat-data@7.28.0': {}
 
   '@babel/core@7.27.7':
@@ -10781,8 +10775,8 @@ snapshots:
   '@babel/generator@7.27.5':
     dependencies:
       '@babel/parser': 7.28.0
-      '@babel/types': 7.27.7
-      '@jridgewell/gen-mapping': 0.3.11
+      '@babel/types': 7.28.0
+      '@jridgewell/gen-mapping': 0.3.12
       '@jridgewell/trace-mapping': 0.3.28
       jsesc: 3.1.0
 
@@ -10800,7 +10794,7 @@ snapshots:
 
   '@babel/helper-compilation-targets@7.27.2':
     dependencies:
-      '@babel/compat-data': 7.27.7
+      '@babel/compat-data': 7.28.0
       '@babel/helper-validator-option': 7.27.1
       browserslist: 4.25.1
       lru-cache: 5.1.1
