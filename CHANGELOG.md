@@ -2,6 +2,38 @@
 
 
 
+## [0.0.1-alpha.4](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.3...0.0.1-alpha.4) (2025-07-04)
+
+
+### Bug Fixes
+
+* **core:** fix createArgs of ControllerFlowHandler. ([c629b56](https://github.com/aurora-mp/framework/commit/c629b5648fcc51f2bbe5104041aca8f70189724f))
+
+
+### Features
+
+* **client:** starting RPC. WIP. ([6b5474b](https://github.com/aurora-mp/framework/commit/6b5474b7f0bb599afb87e6156dcb0f7235870f75))
+* **core:** add useFactory and starting RPC. ([cdea6e9](https://github.com/aurora-mp/framework/commit/cdea6e982767f33bd55970d1ba11347edd61684f))
+* **platform-ragemp-client:** starting RPC. WIP. ([0acdef3](https://github.com/aurora-mp/framework/commit/0acdef3c6cf0e437a3099dfa623313f8964dc455))
+* **platform-ragemp-server:** starting RPC. WIP. ([4a116f4](https://github.com/aurora-mp/framework/commit/4a116f40660a826566ef86972bfacb70bb899ce9))
+* **server:** starting RPC. WIP. ([3067546](https://github.com/aurora-mp/framework/commit/30675460b8ceb59bb6ed7878776a1258d5972e85))
+
+## 0.0.1-alpha.4
+
+### &nbsp;&nbsp;&nbsp;Features
+
+- **client**: Starting RPC. WIP. &nbsp;-&nbsp; by **NeekoGta** [<samp>(6b547)</samp>](https://github.com/aurora-mp/framework/commit/6b5474b)
+- **core**: Add useFactory and starting RPC. &nbsp;-&nbsp; by **NeekoGta** [<samp>(cdea6)</samp>](https://github.com/aurora-mp/framework/commit/cdea6e9)
+- **platform-ragemp-client**: Starting RPC. WIP. &nbsp;-&nbsp; by **NeekoGta** [<samp>(0acde)</samp>](https://github.com/aurora-mp/framework/commit/0acdef3)
+- **platform-ragemp-server**: Starting RPC. WIP. &nbsp;-&nbsp; by **NeekoGta** [<samp>(4a116)</samp>](https://github.com/aurora-mp/framework/commit/4a116f4)
+- **server**: Starting RPC. WIP. &nbsp;-&nbsp; by **NeekoGta** [<samp>(30675)</samp>](https://github.com/aurora-mp/framework/commit/3067546)
+
+### &nbsp;&nbsp;&nbsp;Bug Fixes
+
+- **core**: Fix createArgs of ControllerFlowHandler. &nbsp;-&nbsp; by **NeekoGta** [<samp>(c629b)</samp>](https://github.com/aurora-mp/framework/commit/c629b56)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.3...0.0.1-alpha.4)
+
 ## [0.0.1-alpha.3](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.2...0.0.1-alpha.3) (2025-06-30)
 
 
