@@ -44,3 +44,10 @@ export const PLATFORM_DRIVER = Symbol.for('aurora:platform:driver');
  * creating and managing in-game WebView instances.
  */
 export const WEBVIEW_SERVICE = Symbol.for('aurora:webview:service');
+
+/**
+ * Dependency injection token for the instance container.
+ * Use this symbol to register or retrieve the container that holds
+ * all instances created by the application.
+ */
+export const INSTANCE_CONTAINER = Symbol.for('aurora:instance:container');
