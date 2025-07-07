@@ -3,6 +3,7 @@ packages:
   - packages/*
   - packages/platforms/ragemp/**
   - packages/platforms/fivem/**
+  #- armonia/**
 
 onlyBuiltDependencies:
   - '@swc/core'

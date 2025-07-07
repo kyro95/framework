@@ -2,6 +2,28 @@
 
 
 
+## [0.0.1-alpha.5](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.4...0.0.1-alpha.5) (2025-07-07)
+
+
+### Features
+
+* **framework:** add webview-react package ([7718464](https://github.com/aurora-mp/framework/commit/77184643517067f852a583c72681948d785dc6a2))
+
+
+### Reverts
+
+* Revert "feat(framework): add webview-react package" ([a22043a](https://github.com/aurora-mp/framework/commit/a22043a19e85e7646e1be75f53046ce4a41d5381))
+
+## 0.0.1-alpha.5
+
+### &nbsp;&nbsp;&nbsp;Features
+
+- **framework**:
+  - Add webview-react package &nbsp;-&nbsp; by **Gioele Firicano** [<samp>(77184)</samp>](https://github.com/aurora-mp/framework/commit/7718464)
+  - Add webview-react package" &nbsp;-&nbsp; by **Gioele Firicano** [<samp>(a2204)</samp>](https://github.com/aurora-mp/framework/commit/a22043a)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.4...0.0.1-alpha.5)
+
 ## [0.0.1-alpha.4](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.3...0.0.1-alpha.4) (2025-07-04)
 
 

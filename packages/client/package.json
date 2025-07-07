@@ -1,6 +1,6 @@
 {
     "name": "@aurora-mp/client",
-    "version": "0.0.1-alpha.4",
+    "version": "0.0.1-alpha.5",
     "description": "Client package of the aurora-mp TypeScript framework.",
     "keywords": [
         "aurora-mp",
