@@ -18,13 +18,6 @@ export const CONFIG_SERVICE = Symbol.for('aurora:config:service');
 export const EVENT_SERVICE = Symbol.for('aurora:event:service');
 
 /**
- * Dependency injection token for the instance container.
- * Use this symbol to register or retrieve the container that holds
- * all instances created by the application.
- */
-export const INSTANCE_CONTAINER = Symbol.for('aurora:instance:container');
-
-/**
  * Dependency injection token for the global rpc service.
  * Use this symbol to register or retrieve the service responsible for
  * emitting and listening to application-wide rpcs.

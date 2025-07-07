@@ -15,7 +15,6 @@ import {
     LOGGER_SERVICE,
     INJECT_PROPERTY_KEY,
     CONFIG_SERVICE,
-    INSTANCE_CONTAINER,
 } from '../constants';
 import { ModuleWrapper, Container } from '../di';
 import { ModuleMetadata, Provider, Token, Type } from '../types';
@@ -57,7 +56,7 @@ export class ApplicationFactory {
      */
     private constructor(private readonly platformDriver: IPlatformDriver) {
         this.instanceContainer.register(PLATFORM_DRIVER, this.platformDriver);
-        this.instanceContainer.register(INSTANCE_CONTAINER, this.instanceContainer);
+        this.flowHandler = new ControllerFlowHandler(this.instanceContainer);
         this.eventBinder = new EventBinder(platformDriver, this.flowHandler);
         this.rpcBinder = new RpcBinder(platformDriver, this.flowHandler);
         this.applicationRef = {

@@ -42,12 +42,19 @@ export class ControllerFlowHandler {
                     break;
 
                 case MethodParamType.PAYLOAD:
-                    const payload = rawArgs[1];
-                    if (payload != null && typeof payload === 'object') {
-                        value = param.data ? (payload as any)?.[param.data] : payload;
+                    let rawPayload = rawArgs[1];
+                    if (typeof rawPayload === 'string') {
+                        try {
+                            rawPayload = JSON.parse(rawPayload);
+                        } catch {}
+                    }
+
+                    if (rawPayload != null && typeof rawPayload === 'object') {
+                        value = param.data ? (rawPayload as any)[param.data] : rawPayload;
                     } else {
                         value = rawArgs.slice(1);
                     }
+
                     break;
 
                 case MethodParamType.PARAM:
