@@ -6,10 +6,6 @@ class RageWebViewWrapper implements IWebView {
         private webview: BrowserMp,
     ) {}
 
-    public on(_event: string, _listener: (...args: unknown[]) => void): void {
-        // TODO
-    }
-
     public emit(event: string, ...args: unknown[]): void {
         this.webview.call(event, ...args);
     }
@@ -68,23 +64,18 @@ export class RageClientDriver implements IPlatformDriver {
         return handle;
     }
 
-    /**
-     * Subscribes to a global client-side event.
-     */
     public on(eventName: string, listener: (...args: any[]) => void): void {
         mp.events.add(eventName, listener);
     }
 
-    /**
-     * Subscribes to a global client-side event.
-     */
+    public off(eventName: string, listener: (...args: any[]) => void): void {
+        mp.events.remove(eventName, listener);
+    }
+
     public onServer(eventName: string, listener: (...args: any[]) => void): void {
         mp.events.add(eventName, listener);
     }
 
-    /**
-     * Emits a global client-side event.
-     */
     public emit(eventName: string, ...args: any[]): void {
         mp.events.call(eventName, ...args);
     }

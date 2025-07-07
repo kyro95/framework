@@ -8,6 +8,10 @@ export class RageServerDriver implements IPlatformDriver {
         mp.events.add(eventName, listener);
     }
 
+    public off(eventName: string, listener: (...args: any[]) => void): void {
+        mp.events.remove(eventName, listener);
+    }
+
     public onClient(eventName: string, listener: (player: PlayerMp, ...args: any[]) => void): void {
         mp.events.add(eventName, listener);
     }
