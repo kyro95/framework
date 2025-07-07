@@ -40,7 +40,7 @@ export class ApplicationFactory {
     private readonly moduleWrappers = new Map<Type, ModuleWrapper>();
     private readonly globalModules = new Set<ModuleWrapper>();
     private readonly instanceContainer = new Container();
-    private readonly flowHandler = new ControllerFlowHandler();
+    private readonly flowHandler: ControllerFlowHandler;
     private readonly eventBinder: EventBinder;
     private readonly rpcBinder: RpcBinder;
     private logger: ILogger = console;
@@ -58,7 +58,6 @@ export class ApplicationFactory {
     private constructor(private readonly platformDriver: IPlatformDriver) {
         this.instanceContainer.register(PLATFORM_DRIVER, this.platformDriver);
         this.instanceContainer.register(INSTANCE_CONTAINER, this.instanceContainer);
-
         this.eventBinder = new EventBinder(platformDriver, this.flowHandler);
         this.rpcBinder = new RpcBinder(platformDriver, this.flowHandler);
         this.applicationRef = {
@@ -247,6 +246,8 @@ export class ApplicationFactory {
         } catch {
             this.logger.warn(`[Aurora] LOGGER_SERVICE not found. Falling back to console logging.`);
         }
+
+        this.flowHandler.setLogger(this.logger);
     }
 
     /**
@@ -293,11 +294,17 @@ export class ApplicationFactory {
      */
     private async instantiateModules(): Promise<void> {
         for (const moduleWrapper of this.moduleWrappers.values()) {
+            for (const providerDef of moduleWrapper.metadata.providers ?? []) {
+                const { provide } = normalizeProvider(providerDef);
+                await this.resolveDependency(provide, moduleWrapper);
+            }
+
             for (const controller of moduleWrapper.controllers) {
                 await this.resolveDependency(controller, moduleWrapper);
             }
         }
     }
+
     /**
      * Create an instance of the given class, resolving and injecting both
      * constructor-parameter tokens and decorated property tokens.
@@ -345,6 +352,11 @@ export class ApplicationFactory {
         // Resolve and assign each property dependency
         for (const { key, token } of propsToInject) {
             (instance as any)[key] = await this.resolveDependency(token, contextModule);
+        }
+
+        // Wrap with method-level guard proxy
+        if (this.flowHandler.hasGuards(targetClass)) {
+            return this.flowHandler.wrapWithGuardsProxy(instance, targetClass);
         }
 
         return instance;
@@ -429,19 +441,25 @@ export class ApplicationFactory {
      * 3. All global modules (@Global)
      */
     private findModuleByProvider(token: Token, contextModule: ModuleWrapper): ModuleWrapper | undefined {
+        // Current module
         if (this.findProviderDefinition(token, contextModule)) {
             return contextModule;
         }
 
-        for (const importedModule of contextModule.imports) {
-            if (importedModule.exports.has(token)) {
-                return this.findModuleByProvider(token, importedModule);
+        // Deep search in imports that export the token
+        for (const imported of contextModule.imports) {
+            if (imported.exports.has(token)) {
+                const found = this.findModuleByProvider(token, imported);
+                if (found) {
+                    return found;
+                }
             }
         }
 
-        for (const globalModule of this.globalModules) {
-            if (globalModule.exports.has(token) && this.findProviderDefinition(token, globalModule)) {
-                return globalModule;
+        // Global modules
+        for (const globalMod of this.globalModules) {
+            if (globalMod.exports.has(token) && this.findProviderDefinition(token, globalMod)) {
+                return globalMod;
             }
         }
 

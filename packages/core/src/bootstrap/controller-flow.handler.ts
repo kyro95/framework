@@ -1,18 +1,24 @@
-import { EventMetadata, RpcMetadata } from '../types';
-import { ExecutionContext, MethodParameter } from '../interfaces';
+import { EventMetadata, RpcMetadata, Type } from '../types';
+import { ExecutionContext, Guard, ILogger, MethodParameter } from '../interfaces';
 import { MethodParamType } from '../enums';
+import { GUARDS_METADATA_KEY } from '../constants';
+import { Container } from '../di';
 
 /**
- * Orchestrates the execution pipeline for controller event handlers:
+ * Orchestrates the execution pipeline for controller/service methods:
  * - Resolves method parameters (via decorators)
- * - Invokes the decorated handler method on the controller instance
- *
- * This class is used internally by ApplicationFactory via EventBinder.
- *
- * @category Core
- * @public
+ * - Executes guards if defined
+ * - Invokes the decorated method on the instance
  */
 export class ControllerFlowHandler {
+    private logger: ILogger = console;
+
+    constructor(private readonly container: Container) {}
+
+    public setLogger(logger: ILogger) {
+        this.logger = logger;
+    }
+
     /**
      * Maps the ExecutionContext to an array of arguments for the controller method.
      * @param context The current execution context containing raw arguments.
@@ -20,12 +26,10 @@ export class ControllerFlowHandler {
      * @returns An array of arguments to apply to the controller method.
      */
     public createArgs(context: ExecutionContext, handler: EventMetadata | RpcMetadata): unknown[] {
-        // If no parameter decorators, return raw args
         if (!handler.params?.length) {
             return context.args;
         }
 
-        // Sort by original method signature index
         const sorted: MethodParameter[] = [...handler.params].sort((a, b) => a.index - b.index);
         const rawArgs = context.args;
         const args: unknown[] = [];
@@ -34,29 +38,23 @@ export class ControllerFlowHandler {
             let value: unknown;
             switch (param.type) {
                 case MethodParamType.PLAYER:
-                    // @Player() or @Player('prop')
-                    value = param.data ? (rawArgs[0] as any)[param.data] : rawArgs[0];
+                    value = param.data ? (rawArgs[0] as any)?.[param.data] : rawArgs[0];
                     break;
 
                 case MethodParamType.PAYLOAD:
-                    // @Payload() -> whole payload object
-                    // @Payload('key') -> payload[key]
                     const payload = rawArgs[1];
                     if (payload != null && typeof payload === 'object') {
-                        value = param.data ? (payload as any)[param.data] : payload;
+                        value = param.data ? (payload as any)?.[param.data] : payload;
                     } else {
-                        // fallback: flattened primitives
                         value = rawArgs.slice(1);
                     }
                     break;
 
                 case MethodParamType.PARAM:
-                    // @Param('key') always extracts from payload object if present
                     const obj = rawArgs[1];
                     if (obj != null && typeof obj === 'object') {
-                        value = (obj as any)[param.data as string];
+                        value = (obj as any)?.[param.data as string];
                     } else {
-                        // fallback: positional
                         value = rawArgs[param.index];
                     }
                     break;
@@ -68,5 +66,75 @@ export class ControllerFlowHandler {
         }
 
         return args;
+    }
+
+    public async canActivate(context: ExecutionContext): Promise<boolean> {
+        const targetClass = context.getClass();
+        const handler = context.getHandler();
+
+        const classGuards: Type<Guard>[] = Reflect.getMetadata(GUARDS_METADATA_KEY, targetClass) || [];
+        const methodGuards: Type<Guard>[] =
+            Reflect.getMetadata(GUARDS_METADATA_KEY, targetClass.prototype, handler.name) || [];
+
+        const allGuards = [...classGuards, ...methodGuards];
+        for (const guard of allGuards) {
+            const instance = this.container.resolve<Guard>(guard);
+            const allowed = await instance.canActivate(context);
+
+            if (!allowed) {
+                this.logger.debug(`[Aurora] Access denied by ${guard.name} on ${targetClass.name}.${handler.name}`);
+                return false;
+            }
+
+            this.logger.debug(`[Aurora] Guard ${guard.name} granted access.`);
+        }
+
+        return true;
+    }
+
+    public wrapWithGuardsProxy<T extends object>(instance: T, targetClass: Type): T {
+        const methodNames = Object.getOwnPropertyNames(targetClass.prototype).filter(
+            (name) => name !== 'constructor' && typeof instance[name as keyof T] === 'function',
+        );
+
+        return new Proxy(instance, {
+            get: (obj, prop, receiver) => {
+                if (typeof prop !== 'string' || !methodNames.includes(prop)) {
+                    return Reflect.get(obj, prop, receiver);
+                }
+
+                const original = Reflect.get(obj, prop, receiver) as Function;
+
+                return async (...args: any[]) => {
+                    const ctx: ExecutionContext = {
+                        name: `${targetClass.name}.${prop}`,
+                        args,
+                        payload: args[1] ?? args[0],
+                        player: args[0],
+                        getClass: () => targetClass,
+                        getHandler: () => targetClass.prototype[prop],
+                        getPlayer: () => args[0],
+                    };
+
+                    if (!(await this.canActivate(ctx))) {
+                        this.logger.warn(`[Aurora] Access denied to ${ctx.name}`);
+                        return;
+                    }
+
+                    return original.apply(obj, args);
+                };
+            },
+        });
+    }
+
+    public hasGuards(targetClass: Type): boolean {
+        const proto = targetClass.prototype;
+        const classGuards = Reflect.getMetadata(GUARDS_METADATA_KEY, targetClass) || [];
+
+        if (classGuards.length) return true;
+
+        return Object.getOwnPropertyNames(proto).some(
+            (m) => m !== 'constructor' && (Reflect.getMetadata(GUARDS_METADATA_KEY, proto, m) || []).length > 0,
+        );
     }
 }

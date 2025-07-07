@@ -1,5 +1,6 @@
 import { EventType } from '../enums';
-import { MethodParameter } from '../interfaces';
+import { Guard, MethodParameter } from '../interfaces';
+import { Type } from '../types';
 
 /**
  * Describes a controller method bound to a runtime event, including its type,
@@ -34,4 +35,10 @@ export interface EventMetadata {
      * originates from a WebView context.
      */
     webViewId?: string | number;
+
+    /**
+     * List of Guard classes to run before calling the handler. Each guard
+     * must implement the Guard interface and its `canActivate` method.
+     */
+    guards?: Type<Guard>[];
 }

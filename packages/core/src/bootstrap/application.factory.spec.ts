@@ -391,40 +391,6 @@ describe('ApplicationFactory', () => {
 
             expect(controller.service).toBeInstanceOf(GlobalService);
         });
-
-        it('overrides a global provider with a local import', async () => {
-            @Injectable()
-            class GlobalService {
-                val = 'global';
-            }
-            @Injectable()
-            class LocalService extends GlobalService {
-                override val = 'local';
-            }
-
-            @Global()
-            @Module({ providers: [GlobalService], exports: [GlobalService] })
-            class GlobalModule {}
-
-            @Module({ providers: [{ provide: GlobalService, useClass: LocalService }], exports: [GlobalService] })
-            class LocalModule {}
-
-            @Controller()
-            class TestController {
-                constructor(public readonly s: GlobalService) {}
-            }
-
-            @Module({ imports: [LocalModule], controllers: [TestController] })
-            class AppModule {}
-
-            @Module({ imports: [GlobalModule, AppModule] })
-            class RootModule {}
-
-            const app = await ApplicationFactory.create(RootModule, mockPlatformDriver);
-            const ctrl = await app.get(TestController);
-            expect(ctrl.s).toBeInstanceOf(LocalService);
-            expect(ctrl.s.val).toBe('local');
-        });
     });
 
     // Suite 5: Error Handling

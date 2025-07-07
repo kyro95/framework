@@ -3,6 +3,7 @@ export * from './argument-metadata.interface';
 export * from './config-loader.interface';
 export * from './config-service.interface';
 export * from './execution-context.interface';
+export * from './guard.interface';
 export * from './injectable-options.interface';
 export * from './lifecycle-hooks.interface';
 export * from './logger.interface';

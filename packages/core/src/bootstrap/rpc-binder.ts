@@ -1,5 +1,5 @@
 import { RpcType } from '../enums';
-import { CONTROLLER_PARAMS_KEY, CONTROLLER_RPCS_KEY } from '../constants';
+import { CONTROLLER_PARAMS_KEY, CONTROLLER_RPCS_KEY, GUARDS_METADATA_KEY } from '../constants';
 import { IPlatformDriver } from '../interfaces';
 import { RpcMetadata, Type } from '../types';
 import { ControllerFlowHandler } from './controller-flow.handler';
@@ -11,13 +11,20 @@ export class RpcBinder {
     ) {}
 
     public bindControllerRpcs(controllers: [Type, Record<string, unknown>][]) {
-        for (const [ctor, instance] of controllers) {
-            const rpcs: RpcMetadata[] = Reflect.getMetadata(CONTROLLER_RPCS_KEY, ctor) || [];
+        for (const [controllerType, controllerInstance] of controllers) {
+            const rpcs: RpcMetadata[] = Reflect.getMetadata(CONTROLLER_RPCS_KEY, controllerType) || [];
             for (const rpc of rpcs) {
-                const params = Reflect.getOwnMetadata(CONTROLLER_PARAMS_KEY, ctor.prototype, rpc.methodName) || [];
+                // Attach runtime param metadata
+                const params =
+                    Reflect.getOwnMetadata(CONTROLLER_PARAMS_KEY, controllerType.prototype, rpc.methodName) || [];
                 rpc.params = params;
 
-                const dispatcher = this.createDispatcher(instance, rpc);
+                // Attach runtime guards metadata
+                const guards =
+                    Reflect.getOwnMetadata(GUARDS_METADATA_KEY, controllerType.prototype, rpc.methodName) ?? [];
+                rpc.guards = guards;
+
+                const dispatcher = this.createDispatcher(controllerInstance, rpc);
 
                 // Register to platform
                 switch (rpc.type) {
@@ -43,7 +50,16 @@ export class RpcBinder {
                     args,
                     payload: args,
                     // TODO: player: handler.type === EventType.ON_CLIENT ? args[0] : undefined,
+                    getClass: () => instance.constructor as Type,
+                    getHandler: () => instance[rpc.methodName] as Function,
+                    getPlayer: () => args[0],
                 };
+
+                const allowed = await this.flowHandler.canActivate(context);
+                if (!allowed) {
+                    console.warn(`[Aurora] Access denied for RPC "${rpc.name}"`);
+                    return;
+                }
 
                 const methodArgs = this.flowHandler.createArgs(context, rpc);
                 return await (instance[rpc.methodName] as (...a: any[]) => any)(...methodArgs);

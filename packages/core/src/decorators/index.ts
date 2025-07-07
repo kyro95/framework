@@ -6,3 +6,5 @@ export * from './global.decorator';
 export * from './inject.decorator';
 export * from './injectable.decorator';
 export * from './module.decorator';
+export * from './set-metatadata.decorator';
+export * from './use-guards.decorator';

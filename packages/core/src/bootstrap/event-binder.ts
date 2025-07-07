@@ -1,6 +1,6 @@
 import { EventType } from '../enums';
-import { CONTROLLER_EVENTS_KEY, CONTROLLER_PARAMS_KEY } from '../constants';
-import { IPlatformDriver } from '../interfaces';
+import { CONTROLLER_EVENTS_KEY, CONTROLLER_PARAMS_KEY, GUARDS_METADATA_KEY } from '../constants';
+import { ExecutionContext, IPlatformDriver } from '../interfaces';
 import { EventMetadata, Type } from '../types';
 import { ControllerFlowHandler } from './controller-flow.handler';
 
@@ -28,6 +28,11 @@ export class EventBinder {
                 const params =
                     Reflect.getOwnMetadata(CONTROLLER_PARAMS_KEY, controllerType.prototype, handler.methodName) ?? [];
                 handler.params = params;
+
+                // Attach runtime guards metadata
+                const guards =
+                    Reflect.getOwnMetadata(GUARDS_METADATA_KEY, controllerType.prototype, handler.methodName) ?? [];
+                handler.guards = guards;
 
                 // Dispatcher = wraps flowHandler param injection
                 const dispatcher = this.createDispatcher(controllerInstance, handler);
@@ -57,17 +62,27 @@ export class EventBinder {
     ): (...args: unknown[]) => Promise<void> {
         return async (...args: unknown[]) => {
             try {
-                const context = {
+                const context: ExecutionContext = {
                     name: handler.name,
                     args,
                     payload: args,
                     player: handler.type === EventType.ON_CLIENT ? args[0] : undefined,
+                    getClass: () => instance.constructor as Type,
+                    getHandler: () => instance[handler.methodName] as Function,
+                    getPlayer: () => args[0],
                 };
+
+                const allowed = await this.flowHandler.canActivate(context);
+                if (!allowed) {
+                    console.warn(`[Aurora] Access denied for event "${handler.name}"`);
+                    return;
+                }
+
                 const methodArgs = this.flowHandler.createArgs(context, handler);
                 await (instance[handler.methodName] as (...a: unknown[]) => Promise<void> | void)(...methodArgs);
             } catch (error) {
                 console.error(
-                    `[AuroraDI] Error handling event "${handler.name}" on "${(instance as { constructor: { name: string } }).constructor.name}"`,
+                    `[Aurora] Error handling event "${handler.name}" on "${(instance as { constructor: { name: string } }).constructor.name}"`,
                     error,
                 );
             }
