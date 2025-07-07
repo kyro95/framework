@@ -2,6 +2,14 @@
 
 
 
+## [0.0.1-alpha.6](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.5...0.0.1-alpha.6) (2025-07-07)
+
+## 0.0.1-alpha.6
+
+*No significant changes*
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.5...0.0.1-alpha.6)
+
 ## [0.0.1-alpha.5](https://github.com/aurora-mp/framework/compare/0.0.1-alpha.4...0.0.1-alpha.5) (2025-07-07)
 
 

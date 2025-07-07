@@ -36,6 +36,9 @@
 			"@server/*": [
 				"packages/server/src/*"
 			],
+			"@shared/*": [
+				"gamemode/shared/src/*"
+			],
 			"@webview/*": [
 				"packages/webview/src/*"
 			]
